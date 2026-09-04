@@ -1,7 +1,7 @@
+import java.util.Scanner;
+
 public class Main {
   public static void main(String[] args) {
-    System.out.println("案件マッチングアプリ　ver0.1");
-
     // 以下案件情報
     // 案件名
     String[] projectNames = {
@@ -90,5 +90,49 @@ public class Main {
         1,
         1
     };
+
+    int number = 1;// メニュー番号の初期値
+    Scanner scanner = new Scanner(System.in);
+
+    while (number != 0) {
+      // 初期メニュー表示
+      System.out.print(
+          "\n================================" +
+              "\n  案件マッチングアプリ Ver0.1" +
+              "\n================================" +
+              "\n1. 案件一覧を表示" +
+              "\n2. 必須スキルで検索" +
+              "\n3. リモート可能案件を表示" +
+              "\n4. マッチスコアを表示" +
+              "\n0. 終了" +
+              "\n" +
+              "\n番号を入力してください: ");
+
+      String numberStr = scanner.nextLine();
+      number = Integer.parseInt(numberStr);
+
+      // numberの値に応じて処理を分岐
+      switch (number) {
+        case 1:
+          System.out.println("\n案件一覧機能は現在作成中です。");
+          break;
+        case 2:
+          System.out.println("\n必須スキル検索機能は現在作成中です。");
+          break;
+        case 3:
+          System.out.println("\nリモート可能案件表示機能は現在作成中です。");
+          break;
+        case 4:
+          System.out.println("\nマッチスコア表示機能は現在作成中です。");
+          break;
+        case 0:
+          System.out.println("\nアプリを終了します。");
+          break;
+        default:
+          System.out.println("\n該当するメニューがありません。");
+      }
+    }
+
+    scanner.close();
   }
 }
