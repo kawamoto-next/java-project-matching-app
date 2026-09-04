@@ -114,20 +114,46 @@ public class Main {
       // numberの値に応じて処理を分岐
       switch (number) {
         case 1:
-          System.out.println("\n案件一覧機能は現在作成中です。");
+          System.out.println("\n【案件一覧】");
+          for (int i = 0; i < projectNames.length; i++) {
+            System.out.println("\n" + (i + 1) + ". " + projectNames[i]);
+            System.out.println("--------------------------------");
+            System.out.println("必須スキル: " + requiredSkills[i]);
+            System.out.println("尚可スキル: " + optionalSkills[i]);
+
+            if (requiredYears[i] == 0) {
+              System.out.println("必要経験年数: 指定なし");
+            } else {
+              System.out.println("必要経験年数: " + requiredYears[i] + "年");
+            }
+            System.out.println("勤務地: " + locations[i]);
+
+            if (remoteAvailable[i]) {
+              System.out.println("リモート可否: 可");
+            } else {
+              System.out.println("リモート可否: 不可");
+            }
+          }
+          System.out.println("\nEnterキーを押すとメニューに戻ります。");
+          scanner.nextLine();
           break;
+
         case 2:
           System.out.println("\n必須スキル検索機能は現在作成中です。");
           break;
+
         case 3:
           System.out.println("\nリモート可能案件表示機能は現在作成中です。");
           break;
+
         case 4:
           System.out.println("\nマッチスコア表示機能は現在作成中です。");
           break;
+
         case 0:
           System.out.println("\nアプリを終了します。");
           break;
+
         default:
           System.out.println("\n該当するメニューがありません。");
       }
