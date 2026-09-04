@@ -139,15 +139,56 @@ public class Main {
           break;
 
         case 2:
-          System.out.println("\n必須スキル検索機能は現在作成中です。");
+          System.out.println("\n【必須スキル検索】");
+
+          System.out.print("\n検索する必須スキルを入力してください: ");
+          String searchSkill = scanner.nextLine();
+
+          System.out.println("\n検索結果:");
+          boolean found = false;
+          for (int i = 0; i < projectNames.length; i++) {
+            if (requiredSkills[i].equals(searchSkill)) {
+              System.out.println("\n" + (i + 1) + ". " + projectNames[i]);
+              System.out.println("--------------------------------");
+              System.out.println("必須スキル: " + requiredSkills[i]);
+              System.out.println("尚可スキル: " + optionalSkills[i]);
+
+              if (requiredYears[i] == 0) {
+                System.out.println("必要経験年数: 指定なし");
+              } else {
+                System.out.println("必要経験年数: " + requiredYears[i] + "年");
+              }
+              System.out.println("勤務地: " + locations[i]);
+
+              if (remoteAvailable[i]) {
+                System.out.println("リモート可否: 可");
+              } else {
+                System.out.println("リモート可否: 不可");
+              }
+              found = true;
+            }
+          }
+
+          if (!found) {
+            System.out.println("\n該当する案件が見つかりませんでした。");
+          }
+
+          System.out.println("\nEnterキーを押すとメニューに戻ります。");
+          scanner.nextLine();
           break;
 
         case 3:
-          System.out.println("\nリモート可能案件表示機能は現在作成中です。");
+          System.out.println("\n【リモート可能案件一覧】");
+
+          System.out.println("\nEnterキーを押すとメニューに戻ります。");
+          scanner.nextLine();
           break;
 
         case 4:
-          System.out.println("\nマッチスコア表示機能は現在作成中です。");
+          System.out.println("\n【マッチスコア表示】");
+
+          System.out.println("\nEnterキーを押すとメニューに戻ります。");
+          scanner.nextLine();
           break;
 
         case 0:
@@ -156,6 +197,8 @@ public class Main {
 
         default:
           System.out.println("\n該当するメニューがありません。");
+          System.out.println("\nEnterキーを押すとメニューに戻ります。");
+          scanner.nextLine();
       }
     }
 
