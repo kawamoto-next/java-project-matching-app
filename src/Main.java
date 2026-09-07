@@ -180,6 +180,23 @@ public class Main {
         case 3:
           System.out.println("\n【リモート可能案件一覧】");
 
+          System.out.println("\n検索結果:");
+          for (int i = 0; i < projectNames.length; i++) {
+            if (remoteAvailable[i]) {
+              System.out.println("\n" + (i + 1) + ". " + projectNames[i]);
+              System.out.println("--------------------------------");
+              System.out.println("必須スキル: " + requiredSkills[i]);
+              System.out.println("尚可スキル: " + optionalSkills[i]);
+
+              if (requiredYears[i] == 0) {
+                System.out.println("必要経験年数: 指定なし");
+              } else {
+                System.out.println("必要経験年数: " + requiredYears[i] + "年");
+              }
+              System.out.println("勤務地: " + locations[i]);
+              System.out.println("リモート可否: 可");
+            }
+          }
           System.out.println("\nEnterキーを押すとメニューに戻ります。");
           scanner.nextLine();
           break;
