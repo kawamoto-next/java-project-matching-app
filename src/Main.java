@@ -203,7 +203,76 @@ public class Main {
 
         case 4:
           System.out.println("\n【マッチスコア表示】");
+          for (int i = 0; i < projectNames.length; i++) {
+            int score = 0;
 
+            // 必須スキルのマッチング
+            for (int j = 0; j < engineerSkills.length; j++) {
+              if (requiredSkills[i].equals(engineerSkills[j])) {
+                if (experienceTypes[j] == 2) {
+                  score += 50;
+                } else if (experienceTypes[j] == 1) {
+                  score += 25;
+                }
+                break;
+              }
+            }
+
+            // 尚可スキルのマッチング
+            for (int j = 0; j < engineerSkills.length; j++) {
+              if (optionalSkills[i].equals(engineerSkills[j])) {
+                if (experienceTypes[j] == 2) {
+                  score += 15;
+                } else if (experienceTypes[j] == 1) {
+                  score += 8;
+                }
+                break;
+              }
+            }
+
+            // 経験年数のマッチング
+            if (requiredYears[i] == 0) {
+              score += 15;
+            } else {
+              for (int j = 0; j < engineerSkills.length; j++) {
+                if (requiredSkills[i].equals(engineerSkills[j])) {
+                  if (experienceTypes[j] == 2) {
+                    if (skillYears[j] >= requiredYears[i]) {
+                      score += 15;
+                    } else {
+                      score += skillYears[j] * 15 / requiredYears[i];
+                    }
+                  }
+                  break;
+                }
+              }
+            }
+            // 勤務地のマッチング
+            if (locations[i].equals(preferredLocation)) {
+              score += 10;
+            }
+
+            // リモート可否のマッチング
+            if (remotePreferred) {
+              if (remoteAvailable[i]) {
+                score += 10;
+              }
+            } else {
+              score += 10;
+            }
+            String matchLevel;
+
+            if (score >= 80) {
+              matchLevel = "高マッチ";
+            } else if (score >= 60) {
+              matchLevel = "候補";
+            } else {
+              matchLevel = "低マッチ";
+            }
+            System.out.println("\n" + (i + 1) + ". " + projectNames[i]);
+            System.out.println("--------------------------------");
+            System.out.println("マッチスコア:" + score + "点(" + matchLevel + ")");
+          }
           System.out.println("\nEnterキーを押すとメニューに戻ります。");
           scanner.nextLine();
           break;
