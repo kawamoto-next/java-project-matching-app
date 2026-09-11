@@ -2,7 +2,9 @@ import java.util.Scanner;
 
 public class Main {
   public static void main(String[] args) {
-    // 以下案件情報
+    // 案件情報
+    // 各配列の同じ添字が、同一案件の情報を表す
+
     // 案件名
     String[] projectNames = {
         "Java業務システム開発",
@@ -57,7 +59,7 @@ public class Main {
         false
     };
 
-    // 以下エンジニア情報
+    // エンジニア情報
     // 希望勤務地
     String preferredLocation = "大阪";
 
@@ -73,7 +75,7 @@ public class Main {
         "Linux"
     };
 
-    // 実務経験あり:2、学習経験のみ:1
+    // 経験区分（1: 学習経験のみ、2: 実務経験あり）
     int[] experienceTypes = {
         1,
         2,
@@ -94,6 +96,7 @@ public class Main {
     int number = 1;// メニュー番号の初期値
     Scanner scanner = new Scanner(System.in);
 
+    // 0が入力されるまでメニュー処理を繰り返す
     while (number != 0) {
       // 初期メニュー表示
       System.out.print(
@@ -186,7 +189,7 @@ public class Main {
     scanner.close();
   }
 
-  // 案件一覧表示メソッド
+  // 登録されているすべての案件を一覧表示する
   static void showProjectList(
       String[] projectNames,
       String[] requiredSkills,
@@ -208,7 +211,7 @@ public class Main {
     }
   }
 
-  // 必須スキル検索メソッド
+  // 入力された必須スキルと一致する案件を検索・表示する
   static void searchByRequiredSkill(
       String[] projectNames,
       String[] requiredSkills,
@@ -239,7 +242,7 @@ public class Main {
     }
   }
 
-  // リモート案件検索メソッド
+  // リモート対応可能な案件だけを表示する
   static void showRemoteProjects(
       String[] projectNames,
       String[] requiredSkills,
@@ -264,7 +267,7 @@ public class Main {
     }
   }
 
-  // マッチスコア表示メソッド
+  // 各案件のマッチスコアとマッチレベルを表示する
   static void showMatchScores(
       String[] projectNames,
       String[] requiredSkills,
@@ -294,21 +297,15 @@ public class Main {
           remotePreferred,
           i);
 
-      String matchLevel;
-      if (score >= 80) {
-        matchLevel = "高マッチ";
-      } else if (score >= 60) {
-        matchLevel = "候補";
-      } else {
-        matchLevel = "低マッチ";
-      }
+      String matchLevel = getMatchLevel(score);
+
       System.out.println("\n" + (i + 1) + ". " + projectNames[i]);
       System.out.println("--------------------------------");
       System.out.println("マッチスコア:" + score + "点(" + matchLevel + ")");
     }
   }
 
-  // 案件表示メソッド
+  // 指定された添字の案件情報を1件表示する
   static void showProjectDetails(
       String[] projectNames,
       String[] requiredSkills,
@@ -337,7 +334,7 @@ public class Main {
     }
   }
 
-  // マッチスコア算出メソッド
+  // 指定された案件とエンジニア情報を比較し、マッチスコアを返す
   static int calculateMatchScore(
       String[] requiredSkills,
       String[] optionalSkills,
@@ -354,6 +351,7 @@ public class Main {
     int score = 0;
 
     // 必須スキルのマッチング
+    // 実務経験あり: 50点、学習経験のみ: 25点
     for (int j = 0; j < engineerSkills.length; j++) {
       if (requiredSkills[i].equals(engineerSkills[j])) {
         if (experienceTypes[j] == 2) {
@@ -366,6 +364,7 @@ public class Main {
     }
 
     // 尚可スキルのマッチング
+    // 実務経験あり: 15点、学習経験のみ: 8点
     for (int j = 0; j < engineerSkills.length; j++) {
       if (optionalSkills[i].equals(engineerSkills[j])) {
         if (experienceTypes[j] == 2) {
@@ -378,6 +377,8 @@ public class Main {
     }
 
     // 経験年数のマッチング
+    // 必要経験年数の指定なし、または条件を満たす場合は15点
+    // 条件未達の場合は実務経験年数に応じて部分点を加算
     if (requiredYears[i] == 0) {
       score += 15;
     } else {
@@ -394,12 +395,16 @@ public class Main {
         }
       }
     }
+
     // 勤務地のマッチング
+    // 希望勤務地と案件勤務地が一致する場合は10点
     if (locations[i].equals(preferredLocation)) {
       score += 10;
     }
 
     // リモート可否のマッチング
+    // リモート希望の場合、案件がリモート対応なら10点
+    // リモートを希望しない場合は案件条件に関係なく10点
     if (remotePreferred) {
       if (remoteAvailable[i]) {
         score += 10;
@@ -408,7 +413,22 @@ public class Main {
       score += 10;
     }
 
-    // 点数を計算
+    // 算出した合計スコアを返す
     return score;
+  }
+
+  // マッチスコアからマッチレベルを判定して返す
+  // 80点以上: 高マッチ、60点以上: 候補、それ未満: 低マッチ
+  static String getMatchLevel(int score) {
+    String matchLevel;
+    if (score >= 80) {
+      matchLevel = "高マッチ";
+    } else if (score >= 60) {
+      matchLevel = "候補";
+    } else {
+      matchLevel = "低マッチ";
+    }
+
+    return matchLevel;
   }
 }
