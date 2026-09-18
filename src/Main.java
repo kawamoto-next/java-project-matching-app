@@ -2,61 +2,49 @@ import java.util.Scanner;
 
 public class Main {
   public static void main(String[] args) {
-    // 案件情報
-    // 各配列の同じ添字が、同一案件の情報を表す
 
-    // 案件名
-    String[] projectNames = {
-        "Java業務システム開発",
-        "Reactフロントエンド開発",
-        "Javaバックエンド開発",
-        "Webシステムテスト支援",
-        "AWSインフラ構築支援"
-    };
+    Project[] projects = {
 
-    // 必須スキル
-    String[] requiredSkills = {
-        "Java",
-        "React",
-        "Java",
-        "PostgreSQL",
-        "AWS"
-    };
+        new Project(
+            "Java業務システム開発",
+            "Java",
+            "PostgreSQL",
+            0,
+            "大阪",
+            true),
 
-    // 尚可スキル
-    String[] optionalSkills = {
-        "PostgreSQL",
-        "TypeScript",
-        "Spring Boot",
-        "Linux",
-        "Linux"
-    };
+        new Project(
+            "Reactフロントエンド開発",
+            "React",
+            "TypeScript",
+            1,
+            "大阪",
+            true),
 
-    // 必要経験年数
-    int[] requiredYears = {
-        0,
-        1,
-        2,
-        1,
-        2
-    };
+        new Project(
+            "Javaバックエンド開発",
+            "Java",
+            "Spring Boot",
+            2,
+            "東京",
+            true),
 
-    // 勤務地
-    String[] locations = {
-        "大阪",
-        "大阪",
-        "東京",
-        "大阪",
-        "東京"
-    };
+        new Project(
+            "Webシステムテスト支援",
+            "PostgreSQL",
+            "Linux",
+            1,
+            "大阪",
+            false),
 
-    // リモート可否
-    boolean[] remoteAvailable = {
-        true,
-        true,
-        true,
-        false,
-        false
+        new Project(
+            "AWSインフラ構築支援",
+            "AWS",
+            "Linux",
+            2,
+            "東京",
+            false)
+
     };
 
     // エンジニア情報
@@ -117,13 +105,7 @@ public class Main {
       // numberの値に応じて処理を分岐
       switch (number) {
         case 1:
-          showProjectList(
-              projectNames,
-              requiredSkills,
-              optionalSkills,
-              requiredYears,
-              locations,
-              remoteAvailable);
+          showProjectList(projects);
           System.out.println("\nEnterキーを押すとメニューに戻ります。");
           scanner.nextLine();
           break;
@@ -132,26 +114,13 @@ public class Main {
           System.out.println("\n【必須スキル検索】");
           System.out.print("\n検索する必須スキルを入力してください: ");
           String searchSkill = scanner.nextLine();
-          searchByRequiredSkill(
-              projectNames,
-              requiredSkills,
-              optionalSkills,
-              requiredYears,
-              locations,
-              remoteAvailable,
-              searchSkill);
+          searchByRequiredSkill(projects, searchSkill);
           System.out.println("\nEnterキーを押すとメニューに戻ります。");
           scanner.nextLine();
           break;
 
         case 3:
-          showRemoteProjects(
-              projectNames,
-              requiredSkills,
-              optionalSkills,
-              requiredYears,
-              locations,
-              remoteAvailable);
+          showRemoteProjects(projects);
 
           System.out.println("\nEnterキーを押すとメニューに戻ります。");
           scanner.nextLine();
@@ -159,12 +128,7 @@ public class Main {
 
         case 4:
           showMatchScores(
-              projectNames,
-              requiredSkills,
-              optionalSkills,
-              requiredYears,
-              locations,
-              remoteAvailable,
+              projects,
               engineerSkills,
               experienceTypes,
               skillYears,
@@ -190,49 +154,22 @@ public class Main {
   }
 
   // 登録されているすべての案件を一覧表示する
-  static void showProjectList(
-      String[] projectNames,
-      String[] requiredSkills,
-      String[] optionalSkills,
-      int[] requiredYears,
-      String[] locations,
-      boolean[] remoteAvailable) {
+  static void showProjectList(Project[] projects) {
 
     System.out.println("\n【案件一覧】");
-    for (int i = 0; i < projectNames.length; i++) {
-      showProjectDetails(
-          projectNames,
-          requiredSkills,
-          optionalSkills,
-          requiredYears,
-          locations,
-          remoteAvailable,
-          i);
+    for (int i = 0; i < projects.length; i++) {
+      showProjectDetails(projects[i], i + 1);
     }
   }
 
   // 入力された必須スキルと一致する案件を検索・表示する
-  static void searchByRequiredSkill(
-      String[] projectNames,
-      String[] requiredSkills,
-      String[] optionalSkills,
-      int[] requiredYears,
-      String[] locations,
-      boolean[] remoteAvailable,
-      String searchSkill) {
+  static void searchByRequiredSkill(Project[] projects, String searchSkill) {
 
     System.out.println("\n検索結果:");
     boolean found = false;
-    for (int i = 0; i < projectNames.length; i++) {
-      if (requiredSkills[i].equals(searchSkill)) {
-        showProjectDetails(
-            projectNames,
-            requiredSkills,
-            optionalSkills,
-            requiredYears,
-            locations,
-            remoteAvailable,
-            i);
+    for (int i = 0; i < projects.length; i++) {
+      if (projects[i].requiredSkill.equals(searchSkill)) {
+        showProjectDetails(projects[i], i + 1);
         found = true;
       }
     }
@@ -243,38 +180,20 @@ public class Main {
   }
 
   // リモート対応可能な案件だけを表示する
-  static void showRemoteProjects(
-      String[] projectNames,
-      String[] requiredSkills,
-      String[] optionalSkills,
-      int[] requiredYears,
-      String[] locations,
-      boolean[] remoteAvailable) {
+  static void showRemoteProjects(Project[] projects) {
     System.out.println("\n【リモート可能案件一覧】");
 
     System.out.println("\n検索結果:");
-    for (int i = 0; i < projectNames.length; i++) {
-      if (remoteAvailable[i]) {
-        showProjectDetails(
-            projectNames,
-            requiredSkills,
-            optionalSkills,
-            requiredYears,
-            locations,
-            remoteAvailable,
-            i);
+    for (int i = 0; i < projects.length; i++) {
+      if (projects[i].remoteAvailable) {
+        showProjectDetails(projects[i], i + 1);
       }
     }
   }
 
   // 各案件のマッチスコアとマッチレベルを表示する
   static void showMatchScores(
-      String[] projectNames,
-      String[] requiredSkills,
-      String[] optionalSkills,
-      int[] requiredYears,
-      String[] locations,
-      boolean[] remoteAvailable,
+      Project[] projects,
       String[] engineerSkills,
       int[] experienceTypes,
       int[] skillYears,
@@ -282,52 +201,41 @@ public class Main {
       boolean remotePreferred) {
 
     System.out.println("\n【マッチスコア表示】");
-    for (int i = 0; i < projectNames.length; i++) {
+    for (int i = 0; i < projects.length; i++) {
 
       int score = calculateMatchScore(
-          requiredSkills,
-          optionalSkills,
-          requiredYears,
-          locations,
-          remoteAvailable,
+          projects[i],
           engineerSkills,
           experienceTypes,
           skillYears,
           preferredLocation,
-          remotePreferred,
-          i);
+          remotePreferred);
 
       String matchLevel = getMatchLevel(score);
 
-      System.out.println("\n" + (i + 1) + ". " + projectNames[i]);
+      System.out.println("\n" + (i + 1) + ". " + projects[i].projectName);
       System.out.println("--------------------------------");
       System.out.println("マッチスコア:" + score + "点(" + matchLevel + ")");
     }
   }
 
-  // 指定された添字の案件情報を1件表示する
+  // 指定された案件情報を1件表示する
   static void showProjectDetails(
-      String[] projectNames,
-      String[] requiredSkills,
-      String[] optionalSkills,
-      int[] requiredYears,
-      String[] locations,
-      boolean[] remoteAvailable,
-      int i) {
+      Project project, int number) {
 
-    System.out.println("\n" + (i + 1) + ". " + projectNames[i]);
+    System.out.println("\n" + number + ". " + project.projectName);
     System.out.println("--------------------------------");
-    System.out.println("必須スキル: " + requiredSkills[i]);
-    System.out.println("尚可スキル: " + optionalSkills[i]);
+    System.out.println("必須スキル: " + project.requiredSkill);
+    System.out.println("尚可スキル: " + project.optionalSkill);
 
-    if (requiredYears[i] == 0) {
+    if (project.requiredYears == 0) {
       System.out.println("必要経験年数: 指定なし");
     } else {
-      System.out.println("必要経験年数: " + requiredYears[i] + "年");
+      System.out.println("必要経験年数: " + project.requiredYears + "年");
     }
-    System.out.println("勤務地: " + locations[i]);
+    System.out.println("勤務地: " + project.location);
 
-    if (remoteAvailable[i]) {
+    if (project.remoteAvailable) {
       System.out.println("リモート可否: 可");
     } else {
       System.out.println("リモート可否: 不可");
@@ -336,24 +244,19 @@ public class Main {
 
   // 指定された案件とエンジニア情報を比較し、マッチスコアを返す
   static int calculateMatchScore(
-      String[] requiredSkills,
-      String[] optionalSkills,
-      int[] requiredYears,
-      String[] locations,
-      boolean[] remoteAvailable,
+      Project project,
       String[] engineerSkills,
       int[] experienceTypes,
       int[] skillYears,
       String preferredLocation,
-      boolean remotePreferred,
-      int i) {
+      boolean remotePreferred) {
 
     int score = 0;
 
     // 必須スキルのマッチング
     // 実務経験あり: 50点、学習経験のみ: 25点
     for (int j = 0; j < engineerSkills.length; j++) {
-      if (requiredSkills[i].equals(engineerSkills[j])) {
+      if (project.requiredSkill.equals(engineerSkills[j])) {
         if (experienceTypes[j] == 2) {
           score += 50;
         } else if (experienceTypes[j] == 1) {
@@ -366,7 +269,7 @@ public class Main {
     // 尚可スキルのマッチング
     // 実務経験あり: 15点、学習経験のみ: 8点
     for (int j = 0; j < engineerSkills.length; j++) {
-      if (optionalSkills[i].equals(engineerSkills[j])) {
+      if (project.optionalSkill.equals(engineerSkills[j])) {
         if (experienceTypes[j] == 2) {
           score += 15;
         } else if (experienceTypes[j] == 1) {
@@ -379,16 +282,16 @@ public class Main {
     // 経験年数のマッチング
     // 必要経験年数の指定なし、または条件を満たす場合は15点
     // 条件未達の場合は実務経験年数に応じて部分点を加算
-    if (requiredYears[i] == 0) {
+    if (project.requiredYears == 0) {
       score += 15;
     } else {
       for (int j = 0; j < engineerSkills.length; j++) {
-        if (requiredSkills[i].equals(engineerSkills[j])) {
+        if (project.requiredSkill.equals(engineerSkills[j])) {
           if (experienceTypes[j] == 2) {
-            if (skillYears[j] >= requiredYears[i]) {
+            if (skillYears[j] >= project.requiredYears) {
               score += 15;
             } else {
-              score += skillYears[j] * 15 / requiredYears[i];
+              score += skillYears[j] * 15 / project.requiredYears;
             }
           }
           break;
@@ -398,7 +301,7 @@ public class Main {
 
     // 勤務地のマッチング
     // 希望勤務地と案件勤務地が一致する場合は10点
-    if (locations[i].equals(preferredLocation)) {
+    if (project.location.equals(preferredLocation)) {
       score += 10;
     }
 
@@ -406,7 +309,7 @@ public class Main {
     // リモート希望の場合、案件がリモート対応なら10点
     // リモートを希望しない場合は案件条件に関係なく10点
     if (remotePreferred) {
-      if (remoteAvailable[i]) {
+      if (project.remoteAvailable) {
         score += 10;
       }
     } else {
