@@ -4,23 +4,17 @@ public class Engineer {
     String preferredLocation;
     boolean remotePreferred;
 
-    // 保有スキル・経験区分・経験年数は、各配列の同じ添字が同一スキルの情報を表す
-    String[] engineerSkills;
-    int[] experienceTypes;
-    int[] skillYears;
+    // 保有スキルをSkillオブジェクトの配列として管理する
+    Skill[] skills;
 
     // エンジニア情報を受け取り、各フィールドを初期化する
     Engineer(
             String preferredLocation,
             boolean remotePreferred,
-            String[] engineerSkills,
-            int[] experienceTypes,
-            int[] skillYears) {
+            Skill[] skills) {
 
         this.preferredLocation = preferredLocation;
         this.remotePreferred = remotePreferred;
-        this.engineerSkills = engineerSkills;
-        this.experienceTypes = experienceTypes;
-        this.skillYears = skillYears;
+        this.skills = skills;
     }
 }

@@ -49,6 +49,34 @@ public class Main {
 
     };
 
+    // スキル情報
+    Skill[] skills = {
+        new Skill(
+            "Java",
+            1,
+            0),
+
+        new Skill(
+            "React",
+            2,
+            1),
+
+        new Skill(
+            "TypeScript",
+            2,
+            1),
+
+        new Skill(
+            "PostgreSQL",
+            2,
+            1),
+
+        new Skill(
+            "Linux",
+            2,
+            1)
+    };
+
     // エンジニア情報
     // 希望条件・保有スキル・経験情報をEngineerオブジェクトとして管理する
     Engineer engineer = new Engineer(
@@ -58,32 +86,8 @@ public class Main {
         // リモート希望
         true,
 
-        // 保有スキル
-        new String[] {
-            "Java",
-            "React",
-            "TypeScript",
-            "PostgreSQL",
-            "Linux"
-        },
-
-        // 経験区分（1: 学習経験のみ、2: 実務経験あり）
-        new int[] {
-            1,
-            2,
-            2,
-            2,
-            2
-        },
-
-        // 実務経験年数
-        new int[] {
-            0,
-            1,
-            1,
-            1,
-            1
-        });
+        // スキル情報
+        skills);
 
     int number = 1; // メニュー番号の初期値
     Scanner scanner = new Scanner(System.in);
@@ -239,11 +243,11 @@ public class Main {
 
     // 必須スキルのマッチング
     // 実務経験あり: 50点、学習経験のみ: 25点
-    for (int j = 0; j < engineer.engineerSkills.length; j++) {
-      if (project.requiredSkill.equals(engineer.engineerSkills[j])) {
-        if (engineer.experienceTypes[j] == 2) {
+    for (int j = 0; j < engineer.skills.length; j++) {
+      if (project.requiredSkill.equals(engineer.skills[j].skillName)) {
+        if (engineer.skills[j].experienceType == 2) {
           score += 50;
-        } else if (engineer.experienceTypes[j] == 1) {
+        } else if (engineer.skills[j].experienceType == 1) {
           score += 25;
         }
         break;
@@ -252,11 +256,11 @@ public class Main {
 
     // 尚可スキルのマッチング
     // 実務経験あり: 15点、学習経験のみ: 8点
-    for (int j = 0; j < engineer.engineerSkills.length; j++) {
-      if (project.optionalSkill.equals(engineer.engineerSkills[j])) {
-        if (engineer.experienceTypes[j] == 2) {
+    for (int j = 0; j < engineer.skills.length; j++) {
+      if (project.optionalSkill.equals(engineer.skills[j].skillName)) {
+        if (engineer.skills[j].experienceType == 2) {
           score += 15;
-        } else if (engineer.experienceTypes[j] == 1) {
+        } else if (engineer.skills[j].experienceType == 1) {
           score += 8;
         }
         break;
@@ -269,13 +273,13 @@ public class Main {
     if (project.requiredYears == 0) {
       score += 15;
     } else {
-      for (int j = 0; j < engineer.engineerSkills.length; j++) {
-        if (project.requiredSkill.equals(engineer.engineerSkills[j])) {
-          if (engineer.experienceTypes[j] == 2) {
-            if (engineer.skillYears[j] >= project.requiredYears) {
+      for (int j = 0; j < engineer.skills.length; j++) {
+        if (project.requiredSkill.equals(engineer.skills[j].skillName)) {
+          if (engineer.skills[j].experienceType == 2) {
+            if (engineer.skills[j].skillYears >= project.requiredYears) {
               score += 15;
             } else {
-              score += engineer.skillYears[j] * 15 / project.requiredYears;
+              score += engineer.skills[j].skillYears * 15 / project.requiredYears;
             }
           }
           break;
