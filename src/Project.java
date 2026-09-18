@@ -1,3 +1,4 @@
+// 1件の案件情報を管理するクラス
 public class Project {
 
     String projectName;
@@ -7,6 +8,7 @@ public class Project {
     String location;
     boolean remoteAvailable;
 
+    // 案件情報を受け取り、各フィールドを初期化する
     Project(
             String projectName,
             String requiredSkill,
