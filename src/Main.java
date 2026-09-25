@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -5,77 +7,83 @@ public class Main {
 
     // 案件情報
     // 1案件ごとの情報をProjectオブジェクトとして管理する
-    Project[] projects = {
-
+    List<Project> projects = new ArrayList<>();
+    projects.add(
         new Project(
             "Java業務システム開発",
             "Java",
             "PostgreSQL",
             0,
             "大阪",
-            true),
+            true));
 
+    projects.add(
         new Project(
             "Reactフロントエンド開発",
             "React",
             "TypeScript",
             1,
             "大阪",
-            true),
+            true));
 
+    projects.add(
         new Project(
             "Javaバックエンド開発",
             "Java",
             "Spring Boot",
             2,
             "東京",
-            true),
+            true));
 
+    projects.add(
         new Project(
             "Webシステムテスト支援",
             "PostgreSQL",
             "Linux",
             1,
             "大阪",
-            false),
+            false));
 
+    projects.add(
         new Project(
             "AWSインフラ構築支援",
             "AWS",
             "Linux",
             2,
             "東京",
-            false)
-
-    };
+            false));
 
     // スキル情報
-    Skill[] skills = {
+    List<Skill> skills = new ArrayList<>();
+    skills.add(
         new Skill(
             "Java",
             1,
-            0),
+            0));
 
+    skills.add(
         new Skill(
             "React",
             2,
-            1),
+            1));
 
+    skills.add(
         new Skill(
             "TypeScript",
             2,
-            1),
+            1));
 
+    skills.add(
         new Skill(
             "PostgreSQL",
             2,
-            1),
+            1));
 
+    skills.add(
         new Skill(
             "Linux",
             2,
-            1)
-    };
+            1));
 
     // エンジニア情報
     // 希望条件・保有スキル・経験情報をEngineerオブジェクトとして管理する
@@ -157,22 +165,22 @@ public class Main {
   }
 
   // 登録されているすべての案件を一覧表示する
-  static void showProjectList(Project[] projects) {
+  static void showProjectList(List<Project> projects) {
 
     System.out.println("\n【案件一覧】");
-    for (int i = 0; i < projects.length; i++) {
-      showProjectDetails(projects[i], i + 1);
+    for (int i = 0; i < projects.size(); i++) {
+      showProjectDetails(projects.get(i), i + 1);
     }
   }
 
   // 入力された必須スキルと一致する案件を検索・表示する
-  static void searchByRequiredSkill(Project[] projects, String searchSkill) {
+  static void searchByRequiredSkill(List<Project> projects, String searchSkill) {
 
     System.out.println("\n検索結果:");
     boolean found = false;
-    for (int i = 0; i < projects.length; i++) {
-      if (projects[i].requiredSkill.equals(searchSkill)) {
-        showProjectDetails(projects[i], i + 1);
+    for (int i = 0; i < projects.size(); i++) {
+      if (projects.get(i).requiredSkill.equals(searchSkill)) {
+        showProjectDetails(projects.get(i), i + 1);
         found = true;
       }
     }
@@ -183,30 +191,30 @@ public class Main {
   }
 
   // リモート対応可能な案件だけを表示する
-  static void showRemoteProjects(Project[] projects) {
+  static void showRemoteProjects(List<Project> projects) {
     System.out.println("\n【リモート可能案件一覧】");
 
     System.out.println("\n検索結果:");
-    for (int i = 0; i < projects.length; i++) {
-      if (projects[i].remoteAvailable) {
-        showProjectDetails(projects[i], i + 1);
+    for (int i = 0; i < projects.size(); i++) {
+      if (projects.get(i).remoteAvailable) {
+        showProjectDetails(projects.get(i), i + 1);
       }
     }
   }
 
   // 各案件とエンジニア情報を比較し、マッチスコアとマッチレベルを表示する
   static void showMatchScores(
-      Project[] projects, Engineer engineer) {
+      List<Project> projects, Engineer engineer) {
 
     System.out.println("\n【マッチスコア表示】");
-    for (int i = 0; i < projects.length; i++) {
+    for (int i = 0; i < projects.size(); i++) {
 
       int score = calculateMatchScore(
-          projects[i], engineer);
+          projects.get(i), engineer);
 
       String matchLevel = getMatchLevel(score);
 
-      System.out.println("\n" + (i + 1) + ". " + projects[i].projectName);
+      System.out.println("\n" + (i + 1) + ". " + projects.get(i).projectName);
       System.out.println("--------------------------------");
       System.out.println("マッチスコア:" + score + "点(" + matchLevel + ")");
     }
@@ -243,11 +251,11 @@ public class Main {
 
     // 必須スキルのマッチング
     // 実務経験あり: 50点、学習経験のみ: 25点
-    for (int j = 0; j < engineer.skills.length; j++) {
-      if (project.requiredSkill.equals(engineer.skills[j].skillName)) {
-        if (engineer.skills[j].experienceType == 2) {
+    for (int j = 0; j < engineer.skills.size(); j++) {
+      if (project.requiredSkill.equals(engineer.skills.get(j).skillName)) {
+        if (engineer.skills.get(j).experienceType == 2) {
           score += 50;
-        } else if (engineer.skills[j].experienceType == 1) {
+        } else if (engineer.skills.get(j).experienceType == 1) {
           score += 25;
         }
         break;
@@ -256,11 +264,11 @@ public class Main {
 
     // 尚可スキルのマッチング
     // 実務経験あり: 15点、学習経験のみ: 8点
-    for (int j = 0; j < engineer.skills.length; j++) {
-      if (project.optionalSkill.equals(engineer.skills[j].skillName)) {
-        if (engineer.skills[j].experienceType == 2) {
+    for (int j = 0; j < engineer.skills.size(); j++) {
+      if (project.optionalSkill.equals(engineer.skills.get(j).skillName)) {
+        if (engineer.skills.get(j).experienceType == 2) {
           score += 15;
-        } else if (engineer.skills[j].experienceType == 1) {
+        } else if (engineer.skills.get(j).experienceType == 1) {
           score += 8;
         }
         break;
@@ -273,13 +281,13 @@ public class Main {
     if (project.requiredYears == 0) {
       score += 15;
     } else {
-      for (int j = 0; j < engineer.skills.length; j++) {
-        if (project.requiredSkill.equals(engineer.skills[j].skillName)) {
-          if (engineer.skills[j].experienceType == 2) {
-            if (engineer.skills[j].skillYears >= project.requiredYears) {
+      for (int j = 0; j < engineer.skills.size(); j++) {
+        if (project.requiredSkill.equals(engineer.skills.get(j).skillName)) {
+          if (engineer.skills.get(j).experienceType == 2) {
+            if (engineer.skills.get(j).skillYears >= project.requiredYears) {
               score += 15;
             } else {
-              score += engineer.skills[j].skillYears * 15 / project.requiredYears;
+              score += engineer.skills.get(j).skillYears * 15 / project.requiredYears;
             }
           }
           break;
