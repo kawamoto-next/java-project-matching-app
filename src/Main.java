@@ -116,8 +116,14 @@ public class Main {
               "\n番号を入力してください: ");
 
       String numberStr = scanner.nextLine();
-      number = Integer.parseInt(numberStr);
-
+      try {
+        number = Integer.parseInt(numberStr);
+      } catch (NumberFormatException e) {
+        System.out.println("\n不正な値が入力されました。");
+        System.out.println("Enterキーを押すとメニューに戻ります。");
+        scanner.nextLine();
+        continue;
+      }
       // numberの値に応じて処理を分岐
       switch (number) {
         case 1:
@@ -251,11 +257,11 @@ public class Main {
 
     // 必須スキルのマッチング
     // 実務経験あり: 50点、学習経験のみ: 25点
-    for (int j = 0; j < engineer.skills.size(); j++) {
-      if (project.requiredSkill.equals(engineer.skills.get(j).skillName)) {
-        if (engineer.skills.get(j).experienceType == 2) {
+    for (Skill skill : engineer.skills) {
+      if (project.requiredSkill.equals(skill.skillName)) {
+        if (skill.experienceType == 2) {
           score += 50;
-        } else if (engineer.skills.get(j).experienceType == 1) {
+        } else if (skill.experienceType == 1) {
           score += 25;
         }
         break;
@@ -264,11 +270,11 @@ public class Main {
 
     // 尚可スキルのマッチング
     // 実務経験あり: 15点、学習経験のみ: 8点
-    for (int j = 0; j < engineer.skills.size(); j++) {
-      if (project.optionalSkill.equals(engineer.skills.get(j).skillName)) {
-        if (engineer.skills.get(j).experienceType == 2) {
+    for (Skill skill : engineer.skills) {
+      if (project.optionalSkill.equals(skill.skillName)) {
+        if (skill.experienceType == 2) {
           score += 15;
-        } else if (engineer.skills.get(j).experienceType == 1) {
+        } else if (skill.experienceType == 1) {
           score += 8;
         }
         break;
@@ -281,13 +287,13 @@ public class Main {
     if (project.requiredYears == 0) {
       score += 15;
     } else {
-      for (int j = 0; j < engineer.skills.size(); j++) {
-        if (project.requiredSkill.equals(engineer.skills.get(j).skillName)) {
-          if (engineer.skills.get(j).experienceType == 2) {
-            if (engineer.skills.get(j).skillYears >= project.requiredYears) {
+      for (Skill skill : engineer.skills) {
+        if (project.requiredSkill.equals(skill.skillName)) {
+          if (skill.experienceType == 2) {
+            if (skill.skillYears >= project.requiredYears) {
               score += 15;
             } else {
-              score += engineer.skills.get(j).skillYears * 15 / project.requiredYears;
+              score += skill.skillYears * 15 / project.requiredYears;
             }
           }
           break;
