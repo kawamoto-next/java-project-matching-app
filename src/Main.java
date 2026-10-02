@@ -58,31 +58,31 @@ public class Main {
     skills.add(
         new Skill(
             "Java",
-            1,
+            Skill.LEARNING_ONLY,
             0));
 
     skills.add(
         new Skill(
             "React",
-            2,
+            Skill.PRACTICAL_EXPERIENCE,
             1));
 
     skills.add(
         new Skill(
             "TypeScript",
-            2,
+            Skill.PRACTICAL_EXPERIENCE,
             1));
 
     skills.add(
         new Skill(
             "PostgreSQL",
-            2,
+            Skill.PRACTICAL_EXPERIENCE,
             1));
 
     skills.add(
         new Skill(
             "Linux",
-            2,
+            Skill.PRACTICAL_EXPERIENCE,
             1));
 
     // エンジニア情報
@@ -96,6 +96,8 @@ public class Main {
 
         // スキル情報
         skills);
+
+    MatchCalculator matchCalculator = new MatchCalculator();
 
     int number = 1; // メニュー番号の初期値
     Scanner scanner = new Scanner(System.in);
@@ -150,7 +152,7 @@ public class Main {
 
         case 4:
           showMatchScores(
-              projects, engineer);
+              projects, engineer, matchCalculator);
 
           System.out.println("\nEnterキーを押すとメニューに戻ります。");
           scanner.nextLine();
@@ -185,7 +187,7 @@ public class Main {
     System.out.println("\n検索結果:");
     boolean found = false;
     for (int i = 0; i < projects.size(); i++) {
-      if (projects.get(i).requiredSkill.equals(searchSkill)) {
+      if (projects.get(i).getRequiredSkill().equals(searchSkill)) {
         showProjectDetails(projects.get(i), i + 1);
         found = true;
       }
@@ -202,7 +204,7 @@ public class Main {
 
     System.out.println("\n検索結果:");
     for (int i = 0; i < projects.size(); i++) {
-      if (projects.get(i).remoteAvailable) {
+      if (projects.get(i).isRemoteAvailable()) {
         showProjectDetails(projects.get(i), i + 1);
       }
     }
@@ -210,17 +212,17 @@ public class Main {
 
   // 各案件とエンジニア情報を比較し、マッチスコアとマッチレベルを表示する
   static void showMatchScores(
-      List<Project> projects, Engineer engineer) {
+      List<Project> projects, Engineer engineer, MatchCalculator matchCalculator) {
 
     System.out.println("\n【マッチスコア表示】");
     for (int i = 0; i < projects.size(); i++) {
 
-      int score = calculateMatchScore(
+      int score = matchCalculator.calculateMatchScore(
           projects.get(i), engineer);
 
-      String matchLevel = getMatchLevel(score);
+      String matchLevel = matchCalculator.getMatchLevel(score);
 
-      System.out.println("\n" + (i + 1) + ". " + projects.get(i).projectName);
+      System.out.println("\n" + (i + 1) + ". " + projects.get(i).getProjectName());
       System.out.println("--------------------------------");
       System.out.println("マッチスコア:" + score + "点(" + matchLevel + ")");
     }
@@ -230,110 +232,22 @@ public class Main {
   static void showProjectDetails(
       Project project, int number) {
 
-    System.out.println("\n" + number + ". " + project.projectName);
+    System.out.println("\n" + number + ". " + project.getProjectName());
     System.out.println("--------------------------------");
-    System.out.println("必須スキル: " + project.requiredSkill);
-    System.out.println("尚可スキル: " + project.optionalSkill);
+    System.out.println("必須スキル: " + project.getRequiredSkill());
+    System.out.println("尚可スキル: " + project.getOptionalSkill());
 
-    if (project.requiredYears == 0) {
+    if (project.getRequiredYears() == 0) {
       System.out.println("必要経験年数: 指定なし");
     } else {
-      System.out.println("必要経験年数: " + project.requiredYears + "年");
+      System.out.println("必要経験年数: " + project.getRequiredYears() + "年");
     }
-    System.out.println("勤務地: " + project.location);
+    System.out.println("勤務地: " + project.getLocation());
 
-    if (project.remoteAvailable) {
+    if (project.isRemoteAvailable()) {
       System.out.println("リモート可否: 可");
     } else {
       System.out.println("リモート可否: 不可");
     }
-  }
-
-  // 指定された案件とエンジニア情報を比較し、マッチスコアを返す
-  static int calculateMatchScore(
-      Project project, Engineer engineer) {
-
-    int score = 0;
-
-    // 必須スキルのマッチング
-    // 実務経験あり: 50点、学習経験のみ: 25点
-    for (Skill skill : engineer.skills) {
-      if (project.requiredSkill.equals(skill.skillName)) {
-        if (skill.experienceType == 2) {
-          score += 50;
-        } else if (skill.experienceType == 1) {
-          score += 25;
-        }
-        break;
-      }
-    }
-
-    // 尚可スキルのマッチング
-    // 実務経験あり: 15点、学習経験のみ: 8点
-    for (Skill skill : engineer.skills) {
-      if (project.optionalSkill.equals(skill.skillName)) {
-        if (skill.experienceType == 2) {
-          score += 15;
-        } else if (skill.experienceType == 1) {
-          score += 8;
-        }
-        break;
-      }
-    }
-
-    // 経験年数のマッチング
-    // 必要経験年数の指定なし、または条件を満たす場合は15点
-    // 条件未達の場合は実務経験年数に応じて部分点を加算
-    if (project.requiredYears == 0) {
-      score += 15;
-    } else {
-      for (Skill skill : engineer.skills) {
-        if (project.requiredSkill.equals(skill.skillName)) {
-          if (skill.experienceType == 2) {
-            if (skill.skillYears >= project.requiredYears) {
-              score += 15;
-            } else {
-              score += skill.skillYears * 15 / project.requiredYears;
-            }
-          }
-          break;
-        }
-      }
-    }
-
-    // 勤務地のマッチング
-    // 希望勤務地と案件勤務地が一致する場合は10点
-    if (project.location.equals(engineer.preferredLocation)) {
-      score += 10;
-    }
-
-    // リモート可否のマッチング
-    // リモート希望の場合、案件がリモート対応なら10点
-    // リモートを希望しない場合は案件条件に関係なく10点
-    if (engineer.remotePreferred) {
-      if (project.remoteAvailable) {
-        score += 10;
-      }
-    } else {
-      score += 10;
-    }
-
-    // 算出した合計スコアを返す
-    return score;
-  }
-
-  // マッチスコアからマッチレベルを判定して返す
-  // 80点以上: 高マッチ、60点以上: 候補、それ未満: 低マッチ
-  static String getMatchLevel(int score) {
-    String matchLevel;
-    if (score >= 80) {
-      matchLevel = "高マッチ";
-    } else if (score >= 60) {
-      matchLevel = "候補";
-    } else {
-      matchLevel = "低マッチ";
-    }
-
-    return matchLevel;
   }
 }
