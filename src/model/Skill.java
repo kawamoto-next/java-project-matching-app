@@ -1,4 +1,6 @@
 // 1つのスキルに関する経験情報を管理するクラス
+package model;
+
 public class Skill {
 
     private String skillName;
@@ -9,7 +11,7 @@ public class Skill {
     public static final int PRACTICAL_EXPERIENCE = 2; // 実務経験あり
 
     // スキル情報を受け取り、各フィールドを初期化する
-    Skill(
+    public Skill(
             String skillName,
             int experienceType,
             int skillYears) {

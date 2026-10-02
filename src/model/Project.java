@@ -1,26 +1,24 @@
 // 1件の案件情報を管理するクラス
+package model;
+
+import java.util.List;
+
 public class Project {
 
     private String projectName;
-    private String requiredSkill;
-    private String optionalSkill;
-    private int requiredYears;
+    private List<ProjectSkill> projectSkills;
     private String location;
     private boolean remoteAvailable;
 
     // 案件情報を受け取り、各フィールドを初期化する
-    Project(
+    public Project(
             String projectName,
-            String requiredSkill,
-            String optionalSkill,
-            int requiredYears,
+            List<ProjectSkill> projectSkills,
             String location,
             boolean remoteAvailable) {
 
         this.projectName = projectName;
-        this.requiredSkill = requiredSkill;
-        this.optionalSkill = optionalSkill;
-        this.requiredYears = requiredYears;
+        this.projectSkills = projectSkills;
         this.location = location;
         this.remoteAvailable = remoteAvailable;
     }
@@ -33,28 +31,12 @@ public class Project {
         this.projectName = projectName;
     }
 
-    public String getRequiredSkill() {
-        return requiredSkill;
+    public List<ProjectSkill> getProjectSkills() {
+        return projectSkills;
     }
 
-    public void setRequiredSkill(String requiredSkill) {
-        this.requiredSkill = requiredSkill;
-    }
-
-    public String getOptionalSkill() {
-        return optionalSkill;
-    }
-
-    public void setOptionalSkill(String optionalSkill) {
-        this.optionalSkill = optionalSkill;
-    }
-
-    public int getRequiredYears() {
-        return requiredYears;
-    }
-
-    public void setRequiredYears(int requiredYears) {
-        this.requiredYears = requiredYears;
+    public void setProjectSkills(List<ProjectSkill> projectSkills) {
+        this.projectSkills = projectSkills;
     }
 
     public String getLocation() {

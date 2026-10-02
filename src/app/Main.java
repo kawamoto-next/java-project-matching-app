@@ -1,55 +1,73 @@
+package app;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import model.Engineer;
+import model.Project;
+import model.ProjectSkill;
+import model.Skill;
+import service.MatchCalculator;
 
 public class Main {
   public static void main(String[] args) {
 
     // 案件情報
+    List<ProjectSkill> project1Skills = new ArrayList<>();
+    project1Skills.add(new ProjectSkill("Java", ProjectSkill.REQUIRED, 0));
+    project1Skills.add(new ProjectSkill("PostgreSQL", ProjectSkill.OPTIONAL, 0));
+
+    List<ProjectSkill> project2Skills = new ArrayList<>();
+    project2Skills.add(new ProjectSkill("React", ProjectSkill.REQUIRED, 1));
+    project2Skills.add(new ProjectSkill("TypeScript", ProjectSkill.OPTIONAL, 0));
+
+    List<ProjectSkill> project3Skills = new ArrayList<>();
+    project3Skills.add(new ProjectSkill("Java", ProjectSkill.REQUIRED, 2));
+    project3Skills.add(new ProjectSkill("Spring Boot", ProjectSkill.OPTIONAL, 0));
+
+    List<ProjectSkill> project4Skills = new ArrayList<>();
+    project4Skills.add(new ProjectSkill("PostgreSQL", ProjectSkill.REQUIRED, 1));
+    project4Skills.add(new ProjectSkill("Linux", ProjectSkill.OPTIONAL, 0));
+
+    List<ProjectSkill> project5Skills = new ArrayList<>();
+    project5Skills.add(new ProjectSkill("AWS", ProjectSkill.REQUIRED, 2));
+    project5Skills.add(new ProjectSkill("Linux", ProjectSkill.OPTIONAL, 0));
+
     // 1案件ごとの情報をProjectオブジェクトとして管理する
     List<Project> projects = new ArrayList<>();
     projects.add(
         new Project(
             "Java業務システム開発",
-            "Java",
-            "PostgreSQL",
-            0,
+            project1Skills,
             "大阪",
             true));
 
     projects.add(
         new Project(
             "Reactフロントエンド開発",
-            "React",
-            "TypeScript",
-            1,
+            project2Skills,
             "大阪",
             true));
 
     projects.add(
         new Project(
             "Javaバックエンド開発",
-            "Java",
-            "Spring Boot",
-            2,
+            project3Skills,
             "東京",
             true));
 
     projects.add(
         new Project(
             "Webシステムテスト支援",
-            "PostgreSQL",
-            "Linux",
-            1,
+            project4Skills,
             "大阪",
             false));
 
     projects.add(
         new Project(
             "AWSインフラ構築支援",
-            "AWS",
-            "Linux",
-            2,
+            project5Skills,
             "東京",
             false));
 
@@ -187,9 +205,13 @@ public class Main {
     System.out.println("\n検索結果:");
     boolean found = false;
     for (int i = 0; i < projects.size(); i++) {
-      if (projects.get(i).getRequiredSkill().equals(searchSkill)) {
-        showProjectDetails(projects.get(i), i + 1);
-        found = true;
+      for (ProjectSkill projectSkill : projects.get(i).getProjectSkills()) {
+        if (projectSkill.getRequirementType() == ProjectSkill.REQUIRED &&
+            projectSkill.getSkillName().equals(searchSkill)) {
+          showProjectDetails(projects.get(i), i + 1);
+          found = true;
+          break; // 必須スキルが見つかったらループを抜ける
+        }
       }
     }
 
@@ -234,14 +256,22 @@ public class Main {
 
     System.out.println("\n" + number + ". " + project.getProjectName());
     System.out.println("--------------------------------");
-    System.out.println("必須スキル: " + project.getRequiredSkill());
-    System.out.println("尚可スキル: " + project.getOptionalSkill());
 
-    if (project.getRequiredYears() == 0) {
-      System.out.println("必要経験年数: 指定なし");
-    } else {
-      System.out.println("必要経験年数: " + project.getRequiredYears() + "年");
+    for (ProjectSkill projectSkill : project.getProjectSkills()) {
+      // 必須スキルと尚可スキルを分けて表示する
+      if (projectSkill.getRequirementType() == ProjectSkill.REQUIRED) {
+        System.out.println("必須スキル: " + projectSkill.getSkillName());
+      } else if (projectSkill.getRequirementType() == ProjectSkill.OPTIONAL) {
+        System.out.println("尚可スキル: " + projectSkill.getSkillName());
+      }
+
+      if (projectSkill.getRequiredYears() == 0) {
+        System.out.println("必要経験年数: 指定なし");
+      } else {
+        System.out.println("必要経験年数: " + projectSkill.getRequiredYears() + "年");
+      }
     }
+
     System.out.println("勤務地: " + project.getLocation());
 
     if (project.isRemoteAvailable()) {
@@ -249,5 +279,6 @@ public class Main {
     } else {
       System.out.println("リモート可否: 不可");
     }
+
   }
 }

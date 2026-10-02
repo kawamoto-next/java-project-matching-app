@@ -1,3 +1,5 @@
+package model;
+
 import java.util.List;
 
 // 1人のエンジニアの希望条件・スキル・経験情報を管理するクラス
@@ -10,7 +12,7 @@ public class Engineer {
     private List<Skill> skills;
 
     // エンジニア情報を受け取り、各フィールドを初期化する
-    Engineer(
+    public Engineer(
             String preferredLocation,
             boolean remotePreferred,
             List<Skill> skills) {
