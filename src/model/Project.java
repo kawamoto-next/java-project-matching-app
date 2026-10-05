@@ -17,10 +17,27 @@ public class Project {
             String location,
             boolean remoteAvailable) {
 
+        validateProjectSkills(projectSkills);
+
         this.projectName = projectName;
         this.projectSkills = projectSkills;
         this.location = location;
         this.remoteAvailable = remoteAvailable;
+    }
+
+    private void validateProjectSkills(List<ProjectSkill> projectSkills) {
+        // 必須スキルが1件以上設定されているかをチェックする
+        boolean hasRequiredSkill = false;
+        for (ProjectSkill skill : projectSkills) {
+            if (skill.getRequirementType() == ProjectSkill.REQUIRED) {
+                hasRequiredSkill = true;
+                break;
+            }
+        }
+
+        if (!hasRequiredSkill) {
+            throw new IllegalArgumentException("必須スキルを1件以上設定してください");
+        }
     }
 
     public String getProjectName() {
@@ -36,6 +53,8 @@ public class Project {
     }
 
     public void setProjectSkills(List<ProjectSkill> projectSkills) {
+        validateProjectSkills(projectSkills);
+
         this.projectSkills = projectSkills;
     }
 
